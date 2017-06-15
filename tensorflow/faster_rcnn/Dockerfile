@@ -1,4 +1,4 @@
-FROM nvidia/cuda:8.0-cudnn5-devel
+FROM lukemiller/docker:tensorflow
 
 MAINTAINER Luke Miller
 
