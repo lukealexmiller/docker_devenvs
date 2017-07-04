@@ -11,4 +11,4 @@ WORKDIR "/root"
 
 ENTRYPOINT ["/bin/bash"]
 
-CMD ["/face_blur.sh"]
+CMD ["/root/face_blur.sh"]
