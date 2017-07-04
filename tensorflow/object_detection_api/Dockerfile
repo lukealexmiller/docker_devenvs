@@ -12,7 +12,7 @@ RUN pip --no-cache-dir install \
         lxml
 
 # Clone Tensorflow to have /models directory available
-RUN cd /root/ && git clone https://github.com/tensorflow/models
+RUN cd /root/ && git clone https://github.com/tensorflow/models /root/tensorflow/models
 
 # Compile Protobuf libraries
 RUN cd /root/tensorflow/models && protoc object_detection/protos/*.proto --python_out=.
