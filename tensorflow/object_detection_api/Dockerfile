@@ -4,6 +4,7 @@ MAINTAINER Luke Miller
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
+        protobuf-compiler \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
