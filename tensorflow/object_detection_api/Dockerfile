@@ -15,7 +15,7 @@ RUN pip --no-cache-dir install \
 RUN cd /root/ && git clone https://github.com/tensorflow/tensorflow 
 
 # Compile Protobuf libraries
-RUN cd tensorflow/models && protoc object_detection/protos/*.proto --python_out=.
+RUN cd /root/tensorflow/models && protoc object_detection/protos/*.proto --python_out=.
 
 # From tensorflow/models/
 ENV PYTHONPATH=/root/tensorflow/models:/root/tensorflow/models/slim
