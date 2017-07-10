@@ -49,7 +49,7 @@ RUN pip --no-cache-dir install --upgrade ipython && \
 
 RUN wget -O opencv.zip https://github.com/opencv/opencv/archive/3.2.0.zip && unzip opencv.zip
 
-RUN cd /root/opencv-3.2.0/build/ && cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local  \
+RUN mkdir /root/opencv-3.2.0/build/ && cd /root/opencv-3.2.0/build/ && cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local  \
     -DFORCE_VTK=ON -D WITH_TBB=ON -D WITH_V4L=ON -D WITH_QT=ON -D WITH_OPENGL=ON -D WITH_CUBLAS=ON \
     -D ENABLE_FAST_MATH=1 -D CUDA_FAST_MATH=1 -D CUDA_NVCC_FLAGS="-D_FORCE_INLINES" \
     -D WITH_GDAL=ON -D WITH_XINE=ON -D CUDA_GENERATION=Pascal ..
