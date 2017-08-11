@@ -1,0 +1,20 @@
+version: '2'
+services:
+    digits:
+        image: nvidia/digits:latest
+        restart: always
+        volumes:
+            - db-caffe:/root/local
+        ports:
+            - "5000:5000"
+
+    main:
+        image: lukemiller/docker_devenvs:caffe
+        volumes:
+            - db-caffe:/root/local
+        ports:
+            - "8888:8888"
+
+volumes:
+    db-caffe:
+        driver: local
