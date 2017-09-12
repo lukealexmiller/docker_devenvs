@@ -1,8 +1,6 @@
 services:
   digits:
-    devices:
-    - /dev/nvidia0
-    - /dev/nvidia1
+    devices:  
     - /dev/nvidiactl
     - /dev/nvidia-uvm
     - /dev/nvidia-uvm-tools
@@ -12,7 +10,6 @@ services:
     restart: always
     volumes:
     - /home/lukealexmiller/trainer:/root/local
-    - /home/lukealexmiller/jobs:/jobs
     - nvidia_driver_384.59:/usr/local/nvidia:ro
   main1:
     devices:
@@ -25,7 +22,6 @@ services:
     - 8888:8888
     volumes:
     - /home/lukealexmiller/trainer:/root/local
-    - /home/lukealexmiller/jobs:/jobs
     - nvidia_driver_384.59:/usr/local/nvidia:ro
   main2:
     devices:
@@ -38,7 +34,6 @@ services:
     - 8889:8888
     volumes:
     - /home/lukealexmiller/trainer:/root/local
-    - /home/lukealexmiller/jobs:/jobs
     - nvidia_driver_384.59:/usr/local/nvidia:ro
 version: '2'
 volumes:

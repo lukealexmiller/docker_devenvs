@@ -1,0 +1,30 @@
+version: '2'
+services:
+    digits:
+        image: nvidia/digits:latest
+        restart: always
+        volumes:
+            - /home/lukealexmiller/trainer:/root/local
+            - /home/lukealexmiller/jobs:/jobs
+        ports:
+            - "5000:5000"
+
+    main1:
+        build: .
+        devices:
+            - /dev/nvidia0
+        volumes:
+            - /home/lukealexmiller/trainer:/root/local
+            - /home/lukealexmiller/jobs:/jobs
+        ports:
+            - "8888:8888"
+
+    main2:
+        build: .
+        devices:
+            - /dev/nvidia1
+        volumes:
+            - /home/lukealexmiller/trainer:/root/local
+            - /home/lukealexmiller/jobs:/jobs
+        ports:
+            - "8889:8888"

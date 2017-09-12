@@ -13,7 +13,7 @@ services:
         volumes:
             - db-caffe:/root/local
         ports:
-            - "8888:8888"
+            - "8889:8889"
 
 volumes:
     db-caffe:

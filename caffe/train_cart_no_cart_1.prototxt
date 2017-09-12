@@ -15,7 +15,7 @@ layer {
     mean_value: 128.0
   }
   data_param {
-    source: "/root/local/gesamt_db_320/train_db"
+    source: "/root/local/db/cart_no_cart_1/train_db"
     batch_size: 32
     backend: LMDB
   }
@@ -37,7 +37,7 @@ layer {
     mean_value: 128.0
   }
   data_param {
-    source: "/root/local/gesamt_db_320/val_db"
+    source: "/root/local/db/cart_no_cart_1/val_db"
     batch_size: 8
     backend: LMDB
   }
@@ -5022,8 +5022,8 @@ layer {
   bottom: "reduction_b_concat"
   top: "inception_c1_1x1_2"
   param {
-    lr_mult: 0
-    decay_mult: 0
+    lr_mult: 1
+    decay_mult: 1
   }
   convolution_param {
     num_output: 320
@@ -5084,8 +5084,8 @@ layer {
   bottom: "reduction_b_concat"
   top: "inception_c1_1x3_reduce"
   param {
-    lr_mult: 0
-    decay_mult: 0
+    lr_mult: 1
+    decay_mult: 1
   }
   convolution_param {
     num_output: 384
@@ -5146,8 +5146,8 @@ layer {
   bottom: "inception_c1_1x3_reduce"
   top: "inception_c1_1x3"
   param {
-    lr_mult: 0
-    decay_mult: 0
+    lr_mult: 1
+    decay_mult: 1
   }
   convolution_param {
     num_output: 384
@@ -5210,8 +5210,8 @@ layer {
   bottom: "inception_c1_1x3_reduce"
   top: "inception_c1_3x1"
   param {
-    lr_mult: 0
-    decay_mult: 0
+    lr_mult: 1
+    decay_mult: 1
   }
   convolution_param {
     num_output: 384
@@ -5274,8 +5274,8 @@ layer {
   bottom: "reduction_b_concat"
   top: "inception_c1_3x3_reduce"
   param {
-    lr_mult: 0
-    decay_mult: 0
+    lr_mult: 1
+    decay_mult: 1
   }
   convolution_param {
     num_output: 448
@@ -5336,8 +5336,8 @@ layer {
   bottom: "inception_c1_3x3_reduce"
   top: "inception_c1_3x3"
   param {
-    lr_mult: 0
-    decay_mult: 0
+    lr_mult: 1
+    decay_mult: 1
   }
   convolution_param {
     num_output: 384
@@ -5398,8 +5398,8 @@ layer {
   bottom: "inception_c1_3x3"
   top: "inception_c1_1x3_2"
   param {
-    lr_mult: 0
-    decay_mult: 0
+    lr_mult: 1
+    decay_mult: 1
   }
   convolution_param {
     num_output: 384
@@ -5462,8 +5462,8 @@ layer {
   bottom: "inception_c1_3x3"
   top: "inception_c1_3x1_2"
   param {
-    lr_mult: 0
-    decay_mult: 0
+    lr_mult: 1
+    decay_mult: 1
   }
   convolution_param {
     num_output: 384
@@ -5538,8 +5538,8 @@ layer {
   bottom: "inception_c1_pool"
   top: "inception_c1_1x1"
   param {
-    lr_mult: 0
-    decay_mult: 0
+    lr_mult: 1
+    decay_mult: 1
   }
   convolution_param {
     num_output: 192
@@ -6210,14 +6210,14 @@ layer {
   bottom: "pool_8x8_s1"
   top: "pool_8x8_s1_drop"
   dropout_param {
-    dropout_ratio: 0.2
+    dropout_ratio: 0.5
   }
 }
 layer {
-  name: "classifier_4"
+  name: "classifier_2"
   type: "InnerProduct"
   bottom: "pool_8x8_s1_drop"
-  top: "classifier_4"
+  top: "classifier_2"
   param {
     lr_mult: 1
     decay_mult: 1
@@ -6227,7 +6227,7 @@ layer {
     decay_mult: 1
   }
   inner_product_param {
-    num_output: 4
+    num_output: 2
     weight_filler {
       type: "msra"
     }
@@ -6240,7 +6240,7 @@ layer {
 layer {
   name: "loss"
   type: "SoftmaxWithLoss"
-  bottom: "classifier_4"
+  bottom: "classifier_2"
   bottom: "label"
   top: "loss"
   loss_weight: 1
@@ -6248,23 +6248,11 @@ layer {
 layer {
   name: "acc/top-1"
   type: "Accuracy"
-  bottom: "classifier_4"
+  bottom: "classifier_2"
   bottom: "label"
   top: "acc/top-1"
   include {
     phase: TEST
   }
 }
-layer {
-  name: "acc/top-3"
-  type: "Accuracy"
-  bottom: "classifier_4"
-  bottom: "label"
-  top: "acc/top-3"
-  include {
-    phase: TEST
-  }
-  accuracy_param {
-    top_k: 3
-  }
-}
+

@@ -1,0 +1,19 @@
+version: '2'
+services:
+    caffe_pos_1:
+        image: lukemiller/docker_devenvs:caffe
+        devices:
+            - /dev/nvidia0
+        volumes:
+            - /home/lukealexmiller/inception_pos:/root/local
+        ports:
+            - "8888:8888"
+    caffe_pos_2:
+        image: lukemiller/docker_devenvs:caffe
+        devices:
+            - /dev/nvidia1      
+        volumes:
+            - /home/lukealexmiller/inception_pos:/root/local
+        ports:
+            - "8889:8888"
+
