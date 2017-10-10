@@ -1,0 +1,17 @@
+version: '2'
+services:
+    prep_data:
+        image: tensorflow_src:objdet_api
+        devices:
+            - /dev/nvidia0
+        volumes:
+            - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
+        ports:
+            - "8888:8888"   
+        working_dir: "/root/data/VOCdevkit"
+        command: bash -c "python ./create_pascal_tf_record.py \
+                 --data_dir=./ --year=merged --label_map_path=./cart_label_map.pbtxt \
+                 --ignore_difficult_instances=True --output_path=./cart_only_train.record --set=train &&
+                 python ./create_pascal_tf_record.py \
+                 --data_dir=./ --year=merged --label_map_path=./cart_label_map.pbtxt \
+                 --ignore_difficult_instances=True --output_path=./cart_only_val.record --set=val"

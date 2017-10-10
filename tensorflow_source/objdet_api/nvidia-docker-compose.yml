@@ -1,0 +1,52 @@
+services:
+  tensorboard:
+    command: tensorboard --logdir=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017
+    devices:
+    - /dev/nvidia1
+    - /dev/nvidiactl
+    - /dev/nvidia-uvm
+    - /dev/nvidia-uvm-tools
+    image: tensorflow_src:objdet_api
+    ports:
+    - 6006:6006
+    volumes:
+    - /home/lukealexmiller/objdet_api/models:/root/models
+    - nvidia_driver_384.59:/usr/local/nvidia:ro
+    working_dir: /root/models
+  train:
+    command: python object_detection/train.py --logtostderr --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/cart_only.config
+      --train_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/train
+    devices:
+    - /dev/nvidia0
+    - /dev/nvidiactl
+    - /dev/nvidia-uvm
+    - /dev/nvidia-uvm-tools
+    image: tensorflow_src:objdet_api
+    ports:
+    - 8888:8888
+    volumes:
+    - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
+    - /home/lukealexmiller/objdet_api/models:/root/models
+    - nvidia_driver_384.59:/usr/local/nvidia:ro
+    working_dir: /tensorflow/models/research/
+  val:
+    command: python object_detection/eval.py --logtostderr --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/cart_only.config
+      --checkpoint_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/train
+      --eval_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/eval
+    devices:
+    - /dev/nvidia1
+    - /dev/nvidiactl
+    - /dev/nvidia-uvm
+    - /dev/nvidia-uvm-tools
+    image: tensorflow_src:objdet_api
+    ports:
+    - 8889:8888
+    volumes:
+    - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
+    - /home/lukealexmiller/objdet_api/models:/root/models
+    - nvidia_driver_384.59:/usr/local/nvidia:ro
+    working_dir: /tensorflow/models/research/
+version: '2'
+volumes:
+  nvidia_driver_384.59:
+    external: true
