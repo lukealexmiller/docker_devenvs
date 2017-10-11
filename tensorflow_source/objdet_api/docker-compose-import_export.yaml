@@ -1,0 +1,35 @@
+version: '2'
+services:
+    prep_data:
+        image: tensorflow_src:objdet_api
+        devices:
+            - /dev/nvidia0
+        volumes:
+            - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
+        ports:
+            - "8888:8888"   
+        working_dir: /root/data/VOCdevkit
+        command: bash -c "python ./create_pascal_tf_record.py \
+                 --data_dir=./ --year=merged --label_map_path=./cart_label_map.pbtxt \
+                 --ignore_difficult_instances=True --output_path=./cart_only_train.record --set=train &&
+                 python ./create_pascal_tf_record.py \
+                 --data_dir=./ --year=merged --label_map_path=./cart_label_map.pbtxt \
+                 --ignore_difficult_instances=True --output_path=./cart_only_val.record --set=val"
+    export_model:
+        image: tensorflow_src:objdet_api
+        devices:
+            - /dev/nvidia1
+        volumes:
+            - /home/lukealexmiller/objdet_api/models:/root/models
+        working_dir: /tensorflow/models/research/
+        command: bash -c "python ./create_pascal_tf_record.py \
+                 --data_dir=./ --year=merged --label_map_path=./cart_label_map.pbtxt \
+                 --ignore_difficult_instances=True --output_path=./cart_only_train.record --set=train &&
+                 python ./create_pascal_tf_record.py \
+                 --data_dir=./ --year=merged --label_map_path=./cart_label_map.pbtxt \
+                 --ignore_difficult_instances=True --output_path=./cart_only_val.record --set=val"
+        command: python object_detection/export_inference_graph.py
+                 --input_type image_tensor
+                 --pipeline_config_path /root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/cart_only.config
+                 --trained_checkpoint_prefix /root/models/model.ckpt-50579
+                 --output_directory output_inference_graph.pb

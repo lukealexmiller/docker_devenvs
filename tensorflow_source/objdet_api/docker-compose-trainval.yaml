@@ -8,11 +8,11 @@ services:
             - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
             - /home/lukealexmiller/objdet_api/models:/root/models
         ports:
-            - "8888:8888"
-        working_dir: "/tensorflow/models/research/"
+            - 8888:8888
+        working_dir: /tensorflow/models/research/
         command: python object_detection/train.py --logtostderr 
-                 --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/cart_only.config
-                 --train_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/train
+                 --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/cart_only.config
+                 --train_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/train
 
     val:
         image: tensorflow_src:objdet_api
@@ -22,12 +22,12 @@ services:
             - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
             - /home/lukealexmiller/objdet_api/models:/root/models
         ports:
-            - "8889:8888"
-        working_dir: "/tensorflow/models/research/"
+            - 8889:8888
+        working_dir: /tensorflow/models/research/
         command: python object_detection/eval.py --logtostderr 
-                 --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/cart_only.config
-                 --checkpoint_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/train
-                 --eval_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/eval
+                 --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/cart_only.config
+                 --checkpoint_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/train
+                 --eval_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/eval
 
     tensorboard:
         image: tensorflow_src:objdet_api
@@ -36,6 +36,6 @@ services:
         volumes:
             - /home/lukealexmiller/objdet_api/models:/root/models
         ports:
-            - "6006:6006"
-        working_dir: "/root/models"
-        command: tensorboard --logdir=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017
+            - 6006:6006
+        working_dir: /root/models
+        command: tensorboard --logdir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017

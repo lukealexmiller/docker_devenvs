@@ -8,9 +8,9 @@ services:
             - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
             - /home/lukealexmiller/objdet_api/models:/root/models
         ports:
-            - "8888:8888"   
+            - 8888:8888   
 
-        working_dir: "/root/data/VOCdevkit"
+        working_dir: /root/data/VOCdevkit
         command: bash -c "python ./create_pascal_tf_record.py \
                  --data_dir=./ --year=merged --label_map_path=./cart_label_map.pbtxt \
                  --ignore_difficult_instances=True --output_path=./cart_only_train.record --set=train &&
@@ -26,9 +26,9 @@ services:
             - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
             - /home/lukealexmiller/objdet_api/models:/root/models
         ports:
-            - "8888:8888"   
+            - 8888:8888  
 
-        working_dir: "/tensorflow/models/research/"
+        working_dir: /tensorflow/models/research/
 
         stdin_open: true
         tty: true
@@ -41,9 +41,9 @@ services:
             - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
             - /home/lukealexmiller/objdet_api/models:/root/models
         ports:
-            - "8888:8888"   
+            - 8888:8888 
 
-        working_dir: "/root/data/VOCdevkit"
+        working_dir: /root/data/VOCdevkit
 
         stdin_open: true
         tty: true

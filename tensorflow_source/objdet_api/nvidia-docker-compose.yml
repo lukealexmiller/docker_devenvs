@@ -1,6 +1,6 @@
 services:
   tensorboard:
-    command: tensorboard --logdir=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017
+    command: tensorboard --logdir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017
     devices:
     - /dev/nvidia1
     - /dev/nvidiactl
@@ -14,8 +14,8 @@ services:
     - nvidia_driver_384.59:/usr/local/nvidia:ro
     working_dir: /root/models
   train:
-    command: python object_detection/train.py --logtostderr --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/cart_only.config
-      --train_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/train
+    command: python object_detection/train.py --logtostderr --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/cart_only.config
+      --train_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/train
     devices:
     - /dev/nvidia0
     - /dev/nvidiactl
@@ -30,9 +30,9 @@ services:
     - nvidia_driver_384.59:/usr/local/nvidia:ro
     working_dir: /tensorflow/models/research/
   val:
-    command: python object_detection/eval.py --logtostderr --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/cart_only.config
-      --checkpoint_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/train
-      --eval_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017/eval
+    command: python object_detection/eval.py --logtostderr --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/cart_only.config
+      --checkpoint_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/train
+      --eval_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/eval
     devices:
     - /dev/nvidia1
     - /dev/nvidiactl
