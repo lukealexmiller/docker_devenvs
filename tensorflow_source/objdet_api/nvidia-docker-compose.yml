@@ -1,21 +1,36 @@
 services:
-  tensorboard:
-    command: tensorboard --logdir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017
+  export_model:
+    command: python object_detection/export_inference_graph.py --input_type image_tensor
+      --pipeline_config_path /root/model/head.config --trained_checkpoint_prefix /root/model/train/model.ckpt-73483
+      --output_directory /root/model/exported_model-73483
     devices:
     - /dev/nvidia1
     - /dev/nvidiactl
     - /dev/nvidia-uvm
     - /dev/nvidia-uvm-tools
     image: tensorflow_src:objdet_api
-    ports:
-    - 6006:6006
     volumes:
-    - /home/lukealexmiller/objdet_api/models:/root/models
+    - /home/lukealexmiller/objdet_api/models/faster_rcnn_inception_resnet_v2_atrous_head_01_11_2017:/root/model
     - nvidia_driver_384.59:/usr/local/nvidia:ro
-    working_dir: /root/models
-  train:
-    command: python object_detection/train.py --logtostderr --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/cart_only.config
-      --train_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/train
+    working_dir: /tensorflow/models/research/
+  prep_data:
+    command: bash -c "python ./create_pascal_tf_record.py \ --data_dir=./ --year=VOC2007
+      --label_map_path=./head_label_map.pbtxt \ --ignore_difficult_instances=True
+      --output_path=./head_train.record --set=train && python ./create_pascal_tf_record.py
+      \ --data_dir=./ --year=VOC2007 --label_map_path=./head_label_map.pbtxt \ --ignore_difficult_instances=True
+      --output_path=./head_val.record --set=val"
+    devices:
+    - /dev/nvidia0
+    - /dev/nvidiactl
+    - /dev/nvidia-uvm
+    - /dev/nvidia-uvm-tools
+    image: tensorflow_src:objdet_api
+    volumes:
+    - /home/lukealexmiller/objdet_api/data/raw/heads:/root/data/VOCdevkit
+    - nvidia_driver_384.59:/usr/local/nvidia:ro
+    working_dir: /root/data/VOCdevkit
+  prep_data_nbs:
+    command: jupyter notebook
     devices:
     - /dev/nvidia0
     - /dev/nvidiactl
@@ -25,27 +40,11 @@ services:
     ports:
     - 8888:8888
     volumes:
-    - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
-    - /home/lukealexmiller/objdet_api/models:/root/models
+    - /home/lukealexmiller/objdet_api/data:/root/data
+    - /home/lukealexmiller/objdet_api/nbs:/root/nbs
+    - /home/lukealexmiller/frames:/root/frames
     - nvidia_driver_384.59:/usr/local/nvidia:ro
-    working_dir: /tensorflow/models/research/
-  val:
-    command: python object_detection/eval.py --logtostderr --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/cart_only.config
-      --checkpoint_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/train
-      --eval_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/eval
-    devices:
-    - /dev/nvidia1
-    - /dev/nvidiactl
-    - /dev/nvidia-uvm
-    - /dev/nvidia-uvm-tools
-    image: tensorflow_src:objdet_api
-    ports:
-    - 8889:8888
-    volumes:
-    - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
-    - /home/lukealexmiller/objdet_api/models:/root/models
-    - nvidia_driver_384.59:/usr/local/nvidia:ro
-    working_dir: /tensorflow/models/research/
+    working_dir: /root/nbs
 version: '2'
 volumes:
   nvidia_driver_384.59:

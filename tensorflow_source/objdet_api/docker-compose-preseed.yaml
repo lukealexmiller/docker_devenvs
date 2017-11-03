@@ -1,49 +1,16 @@
 version: '2'
 services:
-    prep_data:
-        image: tensorflow_src:objdet_api
-        devices:
-            - /dev/nvidia0
-        volumes:
-            - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
-            - /home/lukealexmiller/objdet_api/models:/root/models
-        ports:
-            - 8888:8888   
-
-        working_dir: /root/data/VOCdevkit
-        command: bash -c "python ./create_pascal_tf_record.py \
-                 --data_dir=./ --year=merged --label_map_path=./cart_label_map.pbtxt \
-                 --ignore_difficult_instances=True --output_path=./cart_only_train.record --set=train &&
-                 python ./create_pascal_tf_record.py \
-                 --data_dir=./ --year=merged --label_map_path=./cart_label_map.pbtxt \
-                 --ignore_difficult_instances=True --output_path=./cart_only_val.record --set=val"
-
-    train:
-        image: tensorflow_src:objdet_api
-        devices:
-            - /dev/nvidia0
-        volumes:
-            - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
-            - /home/lukealexmiller/objdet_api/models:/root/models
-        ports:
-            - 8888:8888  
-
-        working_dir: /tensorflow/models/research/
-
-        stdin_open: true
-        tty: true
-
-    test:
+    preseed:
         image: tensorflow_src:objdet_api
         devices:
             - /dev/nvidia1
         volumes:
-            - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
             - /home/lukealexmiller/objdet_api/models:/root/models
-        ports:
-            - 8888:8888 
-
-        working_dir: /root/data/VOCdevkit
-
-        stdin_open: true
-        tty: true
+            - /home/lukealexmiller/objdet_api/data/preseed/input:/root/input
+            - /home/lukealexmiller/objdet_api/data/preseed/output:/root/output
+            - /home/lukealexmiller/objdet_api/configs/head:/root/config
+            - /home/lukealexmiller/objdet_api/scripts:/root/scripts
+        working_dir: /root/scripts
+        command:
+            python /root/scripts/preseed.py
+# python -m cProfile -s time -o /root/scripts/log.txt /root/scripts/preseed.py

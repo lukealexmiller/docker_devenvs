@@ -5,37 +5,34 @@ services:
         devices:
             - /dev/nvidia0
         volumes:
-            - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
-            - /home/lukealexmiller/objdet_api/models:/root/models
-        ports:
-            - 8888:8888
+            - /home/lukealexmiller/objdet_api/data/raw/carts_heads:/root/data/VOCdevkit
+            - /home/lukealexmiller/objdet_api/models/faster_rcnn_resnet101_carts_heads_02_11_2017:/root/model
         working_dir: /tensorflow/models/research/
         command: python object_detection/train.py --logtostderr 
-                 --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/cart_only.config
-                 --train_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/train
+                 --pipeline_config_path=/root/model/carts_heads.config
+                 --train_dir=/root/model/train
+#                 --num_clones=2
 
     val:
         image: tensorflow_src:objdet_api
         devices:
             - /dev/nvidia1
         volumes:
-            - /home/hh/trainer_ssd/data/cart_only/VOCdevkit:/root/data/VOCdevkit
-            - /home/lukealexmiller/objdet_api/models:/root/models
-        ports:
-            - 8889:8888
+            - /home/lukealexmiller/objdet_api/data/raw/carts_heads:/root/data/VOCdevkit
+            - /home/lukealexmiller/objdet_api/models/faster_rcnn_resnet101_carts_heads_02_11_2017:/root/model
         working_dir: /tensorflow/models/research/
         command: python object_detection/eval.py --logtostderr 
-                 --pipeline_config_path=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/cart_only.config
-                 --checkpoint_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/train
-                 --eval_dir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017/eval
+                 --pipeline_config_path=/root/model/carts_heads.config
+                 --checkpoint_dir=/root/model/train
+                 --eval_dir=/root/model/eval
 
     tensorboard:
         image: tensorflow_src:objdet_api
         devices:
             - /dev/nvidia1
         volumes:
-            - /home/lukealexmiller/objdet_api/models:/root/models
+            - /home/lukealexmiller/objdet_api/models/faster_rcnn_resnet101_carts_heads_02_11_2017:/root/model
         ports:
             - 6006:6006
-        working_dir: /root/models
-        command: tensorboard --logdir=/root/models/faster_rcnn_inception_resnet_v2_atrous_cart_only_10_10_2017
+        working_dir: /root/model
+        command: tensorboard --logdir=/root/model
