@@ -1,0 +1,15 @@
+version: '2'
+services:
+    nbs:
+        image: tensorflow_src:keras
+        devices:
+            - /dev/nvidia0
+        volumes:
+            - /home/lukealexmiller/keras/data:/root/data
+            - /home/lukealexmiller/keras/models:/root/models
+            - /home/lukealexmiller/keras/nbs:/root/nbs
+            - /home/lukealexmiller/keras/scripts:/root/scripts
+        ports:
+            - "8888:8888"
+        working_dir: /root
+        command: jupyter notebook

@@ -2,7 +2,6 @@ version: '2'
 services:
     digits:
         image: nvidia/digits:latest
-        restart: always
         volumes:
             - /home/lukealexmiller/trainer:/root/local
             - /home/lukealexmiller/jobs:/jobs
@@ -17,7 +16,7 @@ services:
             - /home/lukealexmiller/trainer:/root/local
             - /home/lukealexmiller/jobs:/jobs
         ports:
-            - "8888:8888"
+            - "8887:8888"
     main2:
         image: lukemiller/docker_devenvs:caffe
         devices:

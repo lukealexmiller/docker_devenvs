@@ -8,9 +8,12 @@ services:
             - /home/lukealexmiller/objdet_api/models:/root/models
             - /home/lukealexmiller/objdet_api/data/preseed/input:/root/input
             - /home/lukealexmiller/objdet_api/data/preseed/output:/root/output
-            - /home/lukealexmiller/objdet_api/configs/head:/root/config
+            - /home/lukealexmiller/objdet_api/configs/carts_heads:/root/config
             - /home/lukealexmiller/objdet_api/scripts:/root/scripts
-        working_dir: /root/scripts
-        command:
-            python /root/scripts/preseed.py
+        #working_dir: /root/scripts
+        entrypoint: /bin/sh
+        stdin_open: true
+        tty: true        
+#command:
+            #python /root/scripts/preseed_and_track.py
 # python -m cProfile -s time -o /root/scripts/log.txt /root/scripts/preseed.py

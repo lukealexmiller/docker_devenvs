@@ -5,11 +5,11 @@ services:
         devices:
             - /dev/nvidia0
         volumes:
-            - /home/lukealexmiller/objdet_api/data/raw/carts_heads:/root/data/VOCdevkit
-            - /home/lukealexmiller/objdet_api/models/faster_rcnn_resnet101_carts_heads_02_11_2017:/root/model
+            - /home/lukealexmiller/objdet_api/data/raw/mscoco:/root/data
+            - /home/lukealexmiller/objdet_api/models/ssd_mobilenet_v1_coco_2017_11_08:/root/model
         working_dir: /tensorflow/models/research/
         command: python object_detection/train.py --logtostderr 
-                 --pipeline_config_path=/root/model/carts_heads.config
+                 --pipeline_config_path=/root/model/pipeline.config
                  --train_dir=/root/model/train
 #                 --num_clones=2
 
@@ -18,11 +18,11 @@ services:
         devices:
             - /dev/nvidia1
         volumes:
-            - /home/lukealexmiller/objdet_api/data/raw/carts_heads:/root/data/VOCdevkit
-            - /home/lukealexmiller/objdet_api/models/faster_rcnn_resnet101_carts_heads_02_11_2017:/root/model
+            - /home/lukealexmiller/objdet_api/data/raw/mscoco:/root/data
+            - /home/lukealexmiller/objdet_api/models/ssd_mobilenet_v1_coco_2017_11_08:/root/model
         working_dir: /tensorflow/models/research/
         command: python object_detection/eval.py --logtostderr 
-                 --pipeline_config_path=/root/model/carts_heads.config
+                 --pipeline_config_path=/root/model/pipeline.config
                  --checkpoint_dir=/root/model/train
                  --eval_dir=/root/model/eval
 
@@ -31,8 +31,14 @@ services:
         devices:
             - /dev/nvidia1
         volumes:
-            - /home/lukealexmiller/objdet_api/models/faster_rcnn_resnet101_carts_heads_02_11_2017:/root/model
+            - /home/lukealexmiller/objdet_api/models/ssd_nas_mobile_coco_14_11_2017:/root/model
         ports:
-            - 6006:6006
+            - 6007:6006
         working_dir: /root/model
         command: tensorboard --logdir=/root/model
+
+# ssd_mobilenet_v1_coco_2017_11_08
+# faster_rcnn_resnet101_carts_heads_02_11_2017
+# ssd_mobilenet_v1_carts_heads_15_11_17
+
+# - /home/lukealexmiller/objdet_api/data/raw/carts_heads:/root/data/VOCdevkit

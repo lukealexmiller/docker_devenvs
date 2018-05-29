@@ -1,12 +1,12 @@
-FROM tensorflow_src:latest
+FROM tensorflow_src35:latest
 
 # Install Object Detection API dependencies
 # https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md
 RUN apt-get update && apt-get install -y --no-install-recommends \
         protobuf-compiler \
-        python-pil \
-        python-lxml \
-        python-tk \
+        python3-pil \
+        python3-lxml \
+        python3-tk \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -20,8 +20,6 @@ RUN protoc object_detection/protos/*.proto --python_out=.
 ENV PYTHONPATH=${PYTHONPATH}:/tensorflow/models/research:/tensorflow/models/research/slim
 
 WORKDIR /root
-
-RUN pip install filterpy
 
 # TensorBoard
 EXPOSE 6006

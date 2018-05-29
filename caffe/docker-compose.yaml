@@ -2,7 +2,6 @@ version: '2'
 services:
     digits:
         image: nvidia/digits:latest
-        restart: always
         volumes:
             - db-caffe:/root/local
         ports:

@@ -22,7 +22,7 @@ services:
     - /dev/nvidia-uvm-tools
     image: lukemiller/docker_devenvs:caffe
     ports:
-    - 8888:8888
+    - 8887:8888
     volumes:
     - /home/lukealexmiller/trainer:/root/local
     - /home/lukealexmiller/jobs:/jobs

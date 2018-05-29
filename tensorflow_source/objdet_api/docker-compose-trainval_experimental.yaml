@@ -1,0 +1,50 @@
+version: '2'
+services:
+    train:
+        image: tensorflow_src:objdet_api
+        devices:
+            - /dev/nvidia0
+        volumes:
+            - /home/lukealexmiller/objdet_api/data/raw/red/tmp_head:/root/data
+            - /home/lukealexmiller/objdet_api/models/faster_rcnn_inception_resnet_v2_atrous_head_2018_01_03:/root/model
+            - /home/lukealexmiller/objdet_api/scripts:/root/scripts
+        working_dir: /tensorflow/models/research/
+        command: bash -c "cp /root/scripts/ssd_nas_mobile_feature_extractor* /tensorflow/models/research/object_detection/models &&
+                 cp /root/scripts/model_builder* /tensorflow/models/research/object_detection/builders &&
+                 cp /root/scripts/ssd_mobilenet_v1_feature_extractor.py /tensorflow/models/research/object_detection/models &&
+                 python object_detection/train.py --logtostderr
+                 --pipeline_config_path=/root/model/pipeline.config
+                 --train_dir=/root/model/train"
+                 #cp /root/scripts/trainer.py /tensorflow/models/research/object_detection &&
+                 #cp /root/scripts/eval.py /tensorflow/models/research/object_detection &&
+#                 --num_clones=2
+
+    val:
+        image: tensorflow_src:objdet_api
+        devices:
+            - /dev/nvidia1
+        volumes:
+            - /home/lukealexmiller/objdet_api/data/raw/red/tmp_head:/root/data
+            - /home/lukealexmiller/objdet_api/models/faster_rcnn_inception_resnet_v2_atrous_head_2018_01_03:/root/model
+            - /home/lukealexmiller/objdet_api/scripts:/root/scripts
+        working_dir: /tensorflow/models/research/
+        command: bash -c "cp /root/scripts/ssd_nas_mobile_feature_extractor* /tensorflow/models/research/object_detection/models &&
+                 cp /root/scripts/model_builder* /tensorflow/models/research/object_detection/builders &&
+                 cp /root/scripts/ssd_mobilenet_v1_feature_extractor.py /tensorflow/models/research/object_detection/models &&
+                 python object_detection/eval.py --logtostderr
+                 --pipeline_config_path=/root/model/pipeline.config
+                 --checkpoint_dir=/root/model/train
+                 --eval_dir=/root/model/eval"
+                 #
+                 #cp /root/scripts/eval.py /tensorflow/models/research/object_detection &&
+
+    tensorboard:
+        image: tensorflow_src:objdet_api
+        devices:
+            - /dev/nvidia1
+        volumes:
+            - /home/lukealexmiller/objdet_api/models/faster_rcnn_inception_resnet_v2_atrous_head_2018_01_03:/root/model
+        ports:
+            - 6006:6006
+        working_dir: /root/model
+        command: tensorboard --logdir=/root/model

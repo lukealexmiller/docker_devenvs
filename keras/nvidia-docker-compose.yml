@@ -1,0 +1,22 @@
+services:
+  nbs:
+    command: jupyter notebook
+    devices:
+    - /dev/nvidia0
+    - /dev/nvidiactl
+    - /dev/nvidia-uvm
+    - /dev/nvidia-uvm-tools
+    image: tensorflow_src:keras
+    ports:
+    - 8888:8888
+    volumes:
+    - /home/lukealexmiller/keras/data:/root/data
+    - /home/lukealexmiller/keras/models:/root/models
+    - /home/lukealexmiller/keras/nbs:/root/nbs
+    - /home/lukealexmiller/keras/scripts:/root/scripts
+    - nvidia_driver_384.59:/usr/local/nvidia:ro
+    working_dir: /root
+version: '2'
+volumes:
+  nvidia_driver_384.59:
+    external: true

@@ -1,0 +1,16 @@
+version: '2'
+services:
+    nbs:
+        image: tensorflow_src:objdet_api
+        volumes:
+            - /home/lukealexmiller/objdet_api/data:/root/data
+            - /home/lukealexmiller/objdet_api/models:/root/models
+            - /home/lukealexmiller/objdet_api/nbs:/root/nbs
+            - /home/lukealexmiller/objdet_api/configs:/root/configs
+            - /home/lukealexmiller/objdet_api/scripts:/root/scripts
+        ports:
+            - "8889:8888"
+        working_dir: /
+        command: bash -c "cp /root/scripts/ssd_nas_mobile_feature_extractor* /tensorflow/models/research/object_detection/models &&
+                 cp /root/scripts/model_builder* /tensorflow/models/research/object_detection/builders &&
+                 jupyter notebook"

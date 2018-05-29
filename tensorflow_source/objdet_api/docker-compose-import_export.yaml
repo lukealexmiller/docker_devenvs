@@ -27,15 +27,25 @@ services:
         working_dir: /root/nbs
         command: jupyter notebook
 
-    export_model:
+    prep_data_mscoco:
         image: tensorflow_src:objdet_api
         devices:
-            - /dev/nvidia1
+            - /dev/nvidia0
         volumes:
-            - /home/lukealexmiller/objdet_api/models/faster_rcnn_resnet101_carts_heads_02_11_2017:/root/model
+            - /home/lukealexmiller/objdet_api/data:/root/data
+            - /home/lukealexmiller/objdet_api/scripts:/root/scripts
+        working_dir: /root/scripts
+        command: bash -c "./create_mscoco_tf_record.sh"
+
+
+    export_model:
+        image: tensorflow_src:objdet_api
+        volumes:
+            - /home/lukealexmiller/objdet_api/models/faster_rcnn_inception_resnet_v2_atrous_cart_2017_12_19:/root/model
+            - /home/lukealexmiller/objdet_api/scripts:/root/scripts
         working_dir: /tensorflow/models/research/
-        command: python object_detection/export_inference_graph.py
+        command: bash -c "python object_detection/export_inference_graph.py
                  --input_type image_tensor
-                 --pipeline_config_path /root/model/carts_heads.config
-                 --trained_checkpoint_prefix /root/model/train/model.ckpt-149362
-                 --output_directory /root/model/exported_model-149362
+                 --pipeline_config_path /root/model/pipeline.config
+                 --trained_checkpoint_prefix /root/model/train/model.ckpt-120000
+                 --output_directory /root/model/exported_model-120000/new"
